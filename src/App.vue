@@ -1,87 +1,94 @@
 <template>
     <div id="app">
-        <TopStatistics :symbol=tokenSymbol :percent=salePercent />
+        <h1>Account Details</h1>
 
-        <div>
-            <div v-if="!isLogin" id='loginMethod'>
-                <h3>LOGIN with</h3>
-                <ul>
-                    <li><LoginWithPrivateKey /></li>
-                    <li><LoginWithScatter /></li>
-                </ul>
-            </div>
-            <div v-else>
-                <b-button @click='logout' id='logoutBtn'>LOGOUT</b-button>
-                <AccountInfo :accountName=accountName :balance=balance :staked=staked
-                    :cpuTotal=cpuTotal :cpuUsed=cpuUsed
-                    :netTotal=netTotal :netUsed=netUsed
-                    :ramTotal=ramTotal :ramUsed=ramUsed />
+        <b-form inline id='accountForm'>
+            <label class="mr-sm-2" for="inputPrivateKey">Account name</label>
+            <b-input id="inputPrivateKey" class="mb-2 mr-sm-2 mb-sm-0" placeholder="Enter account name..." v-model="accountName"/>
+            <b-button @click='updateAccountInfo'>SHOW INFO</b-button>
+        </b-form>
 
-                <hr/>
-                <h5 id='customTokenBalance'>
-                    {{ tokenSymbol }} token Balance: {{ customBalance }} {{ tokenSymbol }}
-                </h5>
+        <hr/>
 
-                <BuyMore/>
-            </div>
-        </div>
+        <AccountInfo :accountName=accountName :balance=balance :cpuStakedEOS=cpuStakedEOS :netStakedEOS=netStakedEOS
+            :cpuTotal=cpuTotal :cpuUsed=cpuUsed
+            :netTotal=netTotal :netUsed=netUsed
+            :ramTotal=ramTotal :ramUsed=ramUsed />
+        
+        <CurrentInfo :headBlockId=headBlockId :headBlockNum=headBlockNum :headBlockProducer=headBlockProducer :headBlockTime=headBlockTime />
     </div>
 </template>
 
 <script>
-import TopStatistics from './components/TopStatistics.vue'
-import LoginWithPrivateKey from './components/LoginWithPrivateKey.vue'
-import LoginWithScatter from './components/LoginWithScatter.vue'
-import AccountInfo from './components/AccountInfo.vue'
-import BuyMore from './components/BuyMore.vue'
-import { EventBus } from './EventBus.js'
+    import Eos from 'eosjs'
+    import AccountInfo from './components/AccountInfo.vue'
+    import CurrentInfo from './components/CurrentInfo.vue'
+    import 'bootstrap/dist/css/bootstrap.css'
+    import 'bootstrap-vue/dist/bootstrap-vue.css'
+    import { network, eosNetwork } from './config.js'
+    import { EventBus } from './EventBus.js'
 
-export default {
-    name: 'app',
-    data: function() {
-        return {
-            tokenSymbol: "SKP",
-            salePercent: 5,
-            isLogin: true,
+    export default {
+        name: 'app',
+        data: function() {
+            return {
+                accountName: "",
+                balance: "0 EOS",
+                cpuTotal: 1,
+                cpuUsed: 0,
+                cpuStakedEOS: 0,
+                netTotal: 1, 
+                netUsed: 0,
+                netStakedEOS: 0,
+                ramTotal: 1,
+                ramUsed: 0,
 
-            accountName: "skpskpskpskp",
-            privateKey: "",
-            balance: 123123,
-            staked: 123123,
-            cpuTotal: 123123,
-            cpuUsed: 54321,
-            netTotal: 333333, 
-            netUsed: 321321,
-            ramTotal: 12345,
-            ramUsed: 333,
+                headBlockId: "aaa",
+                headBlockNum: 0,
+                headBlockProducer: "aaa",
+                headBlockTime: "aaa",
+                
+                eos: null
+            }
+        },
+        components: {
+            AccountInfo, CurrentInfo
+        },
+        created: async function() {
+            EventBus.$on('callUpdateCurrentInfo', this.updateCurrentInfo);
 
-            customBalance: 77777
+            this.eos = Eos(eosNetwork);
+        },
+        methods: {
+            updateAccountInfo: async function() {
+                let result = await this.eos.getAccount({'account_name':this.accountName});
+
+                console.log(result);
+
+                this.accountName = result.account_name;
+                this.balance = result.core_liquid_balance;
+                this.cpuTotal = Number(result.cpu_limit.max);
+                this.cpuUsed = result.cpu_limit.used;
+                this.cpuStakedEOS = result.cpu_weight;
+                this.netTotal = Number(result.net_limit.max);
+                this.netUsed = result.net_limit.used;
+                this.netStakedEOS = result.net_weight;
+                this.ramTotal = result.ram_quota;
+                this.ramUsed = result.ram_usage;
+
+                EventBus.$emit('callAccountInfoCircleUpdate');
+            },
+            updateCurrentInfo: async function() {
+                let result = await this.eos.getInfo({});
+
+                this.headBlockId = result.head_block_id;
+                this.headBlockNum = result.head_block_num;
+                this.headBlockProducer = result.head_block_producer;
+                this.headBlockTime = result.head_block_time;
+            }
         }
-    },
-    components: {
-        TopStatistics, LoginWithPrivateKey, LoginWithScatter, AccountInfo, BuyMore
-    },
-    created: function() {
-        EventBus.$on('callPrivateKeyLogin', this.loginWithPrivate);
-        EventBus.$on('callScatterLogin', this.loginWithScatter);
-        EventBus.$on('callBuyMore', this.buyMoreToken);
-    },
-    methods: {
-        loginWithPrivate: function(obj) {
-            alert("login with private! : " + obj.accountName + ", " + obj.privateKey);
-        },
-        loginWithScatter: function() {
-            alert("login with Scatter!");
-        },
-        logout: function() {
-            this.isLogin = false;
-        },
-        buyMoreToken: function(amount) {
-            alert("buy more: " + Number(amount));
-        }
+        
     }
-    
-}
 </script>
 
 <style>
@@ -92,10 +99,7 @@ export default {
     color: #2c3e50;
     padding: 40px;
 }
-#loginMethod {
-    margin-top: 60px;
-}
-#logoutBtn {
-    margin-top: 60px;
+#accountForm {
+    margin: 40px 0 40px 0;
 }
 </style>

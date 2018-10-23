@@ -2,8 +2,8 @@
     <div id="accountInfo">
         <div id='accountInfoLeft'>
             <h5>Account: {{ accountName }}</h5>
-            <h5>EOS Balance: {{ balanceComputed }} EOS</h5>
-            <h5>EOS Staked: {{ stakedComputed }} EOS</h5>
+            <h5>EOS Balance: {{ balanceComputed }}</h5>
+            <h5>Total Staked: {{ stakedComputed }} EOS</h5>
         </div>
         <div class='circleDiv'>
             <vue-circle ref='circleCPU'
@@ -11,7 +11,7 @@
                 :progress="cpuPercentage"
                 :show-percent=true>
                 <h5>CPU</h5>
-                <p>{{ cpuUsed }} / {{ cpuTotal }} (ms)</p>
+                <p>{{ cpuUsed }} / {{ cpuTotal }} (&#x00B5s)</p>
             </vue-circle>
         </div>
         <div class='circleDiv'>
@@ -41,45 +41,57 @@
 
 <script>
 import VueCircle from 'vue2-circle-progress/src/index.vue'
+import { EventBus } from '../EventBus.js'
 
 export default {
     name: 'AccountInfo',
     props: {
         accountName: String,
-        balance: Number,
-        staked: Number,
+        balance: String,
         cpuTotal: Number,
         cpuUsed: Number,
+        cpuStakedEOS: Number,
         netTotal: Number,
         netUsed: Number,
+        netStakedEOS: Number,
         ramTotal: Number,
         ramUsed: Number
     },
     components: { VueCircle },
+    mounted: function() {
+        EventBus.$on('callAccountInfoCircleUpdate', this.updateCircle);
+    },
     computed: {
         balanceComputed: function() {
-            return this.balance + "!!";
+            return this.balance;
         },
         stakedComputed: function() {
-            return this.staked + "!!";
+            return ( this.cpuStakedEOS + this.netStakedEOS ) / 1000;
         },
         cpuPercentage: function() {
+            // this.$refs.circleCPU.updateProgress(this.cpuUsed / this.cpuTotal * 100);
             return this.cpuUsed / this.cpuTotal * 100;
+            
         },
         netPercentage: function() {
+            // this.$refs.circleNET.updateProgress(this.netUsed / this.netTotal * 100);
             return this.netUsed / this.netTotal * 100;
+            
         },
         ramPercentage: function() {
+            // this.$refs.circleRAM.updateProgress(this.ramUsed / this.ramTotal * 100);
             return this.ramUsed / this.ramTotal * 100;
+            
         }
     },
     methods: {
-        // change: function() {
-        //     this.cpuUsed = 99999;
-        // },
-        // update: function() {
-        //     this.$refs.circleCPU.updateProgress(this.cpuPercentage);
-        // }
+        updateCircle: function() {
+            this.$nextTick(function() {
+                this.$refs.circleCPU.updateProgress(this.cpuPercentage);
+                this.$refs.circleNET.updateProgress(this.netPercentage);
+                this.$refs.circleRAM.updateProgress(this.ramPercentage);
+            });
+        }
     }
 }
 </script>

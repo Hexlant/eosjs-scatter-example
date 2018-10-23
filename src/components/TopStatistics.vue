@@ -1,11 +1,5 @@
 <template>
     <div class="topStatistics">
-        <h1>{{ symbol }} token Manager</h1>
-        <div id='statisticsPercent'>{{ percent }}%</div>
-        <div id='statisticsProgress'>
-            <div id='statisticsProgressInner' :style="'width:' + percent + '%'">&nbsp;</div>
-        </div>
-        
     </div>
 </template>
 
@@ -13,8 +7,6 @@
 export default {
     name: 'TopStatistics',
     props: {
-        symbol: String,
-        percent: Number
     }
 }
 </script>
