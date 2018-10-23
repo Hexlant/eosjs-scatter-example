@@ -32,9 +32,6 @@
                 <p>{{ ramUsed }} / {{ ramTotal }} (bytes)</p>
             </vue-circle>
         </div>
-
-        <!-- <div><button @click='change'>change</button></div>
-        <div><button @click='update'>update</button></div> -->
     </div>
 
 </template>
@@ -69,17 +66,14 @@ export default {
             return ( this.cpuStakedEOS + this.netStakedEOS ) / 1000;
         },
         cpuPercentage: function() {
-            // this.$refs.circleCPU.updateProgress(this.cpuUsed / this.cpuTotal * 100);
             return this.cpuUsed / this.cpuTotal * 100;
             
         },
         netPercentage: function() {
-            // this.$refs.circleNET.updateProgress(this.netUsed / this.netTotal * 100);
             return this.netUsed / this.netTotal * 100;
             
         },
         ramPercentage: function() {
-            // this.$refs.circleRAM.updateProgress(this.ramUsed / this.ramTotal * 100);
             return this.ramUsed / this.ramTotal * 100;
             
         }
