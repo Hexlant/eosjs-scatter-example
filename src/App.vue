@@ -17,6 +17,7 @@
                     :netTotal=netTotal :netUsed=netUsed
                     :ramTotal=ramTotal :ramUsed=ramUsed />
 
+                <hr/>
                 <h5 id='customTokenBalance'>
                     {{ tokenSymbol }} token Balance: {{ customBalance }} {{ tokenSymbol }}
                 </h5>
@@ -44,12 +45,13 @@ export default {
             isLogin: true,
 
             accountName: "skpskpskpskp",
+            privateKey: "",
             balance: 123123,
             staked: 123123,
             cpuTotal: 123123,
             cpuUsed: 54321,
             netTotal: 333333, 
-            netUsed: 321,
+            netUsed: 321321,
             ramTotal: 12345,
             ramUsed: 333,
 

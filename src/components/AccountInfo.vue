@@ -10,7 +10,8 @@
                 :start-angle="-Math.PI/2"
                 :progress="cpuPercentage"
                 :show-percent=true>
-                <p>CPU : {{ cpuUsed }} / {{ cpuTotal }} (ms)</p>
+                <h5>CPU</h5>
+                <p>{{ cpuUsed }} / {{ cpuTotal }} (ms)</p>
             </vue-circle>
         </div>
         <div class='circleDiv'>
@@ -18,7 +19,8 @@
                 :start-angle="-Math.PI/2"
                 :progress="netPercentage"
                 :show-percent=true>
-                <p>NET : {{ netUsed }} / {{ netTotal }} (bytes)</p>
+                <h5>NET</h5>
+                <p>{{ netUsed }} / {{ netTotal }} (bytes)</p>
             </vue-circle>
         </div>
         <div class='circleDiv'>
@@ -26,7 +28,8 @@
                 :start-angle="-Math.PI/2"
                 :progress="ramPercentage"
                 :show-percent=true>
-                <p>RAM : {{ ramUsed }} / {{ ramTotal }} (bytes)</p>
+                <h5>RAM</h5>
+                <p>{{ ramUsed }} / {{ ramTotal }} (bytes)</p>
             </vue-circle>
         </div>
 

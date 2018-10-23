@@ -1,6 +1,6 @@
 <template>
     <div class="topStatistics">
-        <h1>{{ symbol }} token sale statistics</h1>
+        <h1>{{ symbol }} token Manager</h1>
         <div id='statisticsPercent'>{{ percent }}%</div>
         <div id='statisticsProgress'>
             <div id='statisticsProgressInner' :style="'width:' + percent + '%'">&nbsp;</div>
