@@ -39,20 +39,13 @@
                     <div class='tableTitle'>Erase my data</div>
                     <div><b-button @click='eraseMyData'>ERASE from table</b-button></div>
                 </div>
-
-
-                <!-- <BuyMore/> -->
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import TopStatistics from './components/TopStatistics.vue'
-    import LoginWithPrivateKey from './components/LoginWithPrivateKey.vue'
     import LoginWithScatter from './components/LoginWithScatter.vue'
-    import AccountInfo from './components/AccountInfo.vue'
-    import BuyMore from './components/BuyMore.vue'
     import { EventBus } from './EventBus.js'
 
     import Eos from 'eosjs'
@@ -63,17 +56,15 @@
         name: 'app',
         data: function() {
             return {
-                maxSupply: 100,
-                supply: 30,
-                tokenSymbol: "SKP",
-                salePercent: 5,
                 isLogin: false,
+                scatterLoaded: false,
 
                 accountName: "",
                 accountPermission: "",
 
-                scatterLoaded: false,
                 scatter: null,
+                eos: null,
+
                 network: {
                     blockchain: 'eos',
                     host: 'jungle.cryptolions.io',
@@ -81,7 +72,7 @@
                     protocol: 'http',
                     chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca'
                 },
-                eos: null,
+                
                 contractAccount: 'lazylion1234',
                 tableData: [],
                 tableFields: ['key', 'first_name', 'last_name', 'street', 'city', 'state'],
@@ -94,12 +85,10 @@
             }
         },
         components: {
-            TopStatistics, LoginWithPrivateKey, LoginWithScatter, AccountInfo, BuyMore
+            LoginWithScatter
         },
         created: function() {
-            EventBus.$on('callPrivateKeyLogin', this.loginWithPrivate);
             EventBus.$on('callScatterLogin', this.loginWithScatter);
-            EventBus.$on('callBuyMore', this.buyMoreToken);
 
             ScatterJS.plugins( new ScatterEOS() );
 
@@ -210,11 +199,8 @@
                 }).catch(error => {
                     alert('error: ' + JSON.stringify(error));
                 });
-              
-            },
-            
+            }
         }
-        
     }
 </script>
 
