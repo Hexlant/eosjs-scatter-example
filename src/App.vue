@@ -25,7 +25,6 @@
     import CurrentInfo from './components/CurrentInfo.vue'
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
-    import { network, eosNetwork } from './config.js'
     import { EventBus } from './EventBus.js'
 
     export default {
@@ -47,6 +46,14 @@
                 headBlockNum: 0,
                 headBlockProducer: "aaa",
                 headBlockTime: "aaa",
+
+                networkOptions: {
+                    chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca',
+                    httpEndpoint: "http://jungle.cryptolions.io:18888",
+                    broadcast: true,
+                    verbose: true,
+                    sign: true
+                },
                 
                 eos: null
             }
@@ -57,7 +64,7 @@
         created: async function() {
             EventBus.$on('callUpdateCurrentInfo', this.updateCurrentInfo);
 
-            this.eos = Eos(eosNetwork);
+            this.eos = Eos(this.networkOptions);
         },
         methods: {
             updateAccountInfo: async function() {
