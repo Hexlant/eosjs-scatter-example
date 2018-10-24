@@ -81,6 +81,8 @@
             updateCurrentInfo: async function() {
                 let result = await this.eos.getInfo({});
 
+                console.log(result);
+
                 this.headBlockId = result.head_block_id;
                 this.headBlockNum = result.head_block_num;
                 this.headBlockProducer = result.head_block_producer;
