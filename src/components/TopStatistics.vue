@@ -1,9 +1,8 @@
 <template>
     <div class="topStatistics">
-        <h1>{{ symbol }} token Manager</h1>
-        <div id='statisticsPercent'>{{ percent }}%</div>
+        <div id='statisticsPercent'>{{ percentComputed }}%</div>
         <div id='statisticsProgress'>
-            <div id='statisticsProgressInner' :style="'width:' + percent + '%'">&nbsp;</div>
+            <div id='statisticsProgressInner' :style="'width:' + percentComputed + '%'">&nbsp;</div>
         </div>
         
     </div>
@@ -13,8 +12,13 @@
 export default {
     name: 'TopStatistics',
     props: {
-        symbol: String,
-        percent: Number
+        max: Number,
+        current: Number
+    },
+    computed: {
+        percentComputed: function() {
+            return (this.current / this.max * 100).toFixed(2);
+        }
     }
 }
 </script>

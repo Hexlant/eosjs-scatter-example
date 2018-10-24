@@ -1,16 +1,13 @@
 <template>
     <div id="app">
-        <TopStatistics :symbol=tokenSymbol :percent=salePercent />
+        <h1 id='titleH1'>Token Manager</h1>
 
         <div>
             <div v-if="!isLogin" id='loginMethod'>
-                <h3>LOGIN with</h3>
-                <ul>
-                    <li><LoginWithPrivateKey /></li>
-                    <li><LoginWithScatter /></li>
-                </ul>
+                <LoginWithScatter />
             </div>
             <div v-else>
+                <TopStatistics :max=maxSupply :current=supply />
                 <b-button @click='logout' id='logoutBtn'>LOGOUT</b-button>
                 <AccountInfo :accountName=accountName :balance=balance :staked=staked
                     :cpuTotal=cpuTotal :cpuUsed=cpuUsed
@@ -40,6 +37,8 @@ export default {
     name: 'app',
     data: function() {
         return {
+            maxSupply: 100,
+            supply: 30,
             tokenSymbol: "SKP",
             salePercent: 5,
             isLogin: true,
@@ -67,9 +66,6 @@ export default {
         EventBus.$on('callBuyMore', this.buyMoreToken);
     },
     methods: {
-        loginWithPrivate: function(obj) {
-            alert("login with private! : " + obj.accountName + ", " + obj.privateKey);
-        },
         loginWithScatter: function() {
             alert("login with Scatter!");
         },
@@ -92,8 +88,12 @@ export default {
     color: #2c3e50;
     padding: 40px;
 }
+#titleH1 {
+    text-align:center;
+}
 #loginMethod {
     margin-top: 60px;
+    text-align:center;
 }
 #logoutBtn {
     margin-top: 60px;
