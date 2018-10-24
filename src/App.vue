@@ -31,6 +31,13 @@
         name: 'app',
         data: function() {
             return {
+                /**
+                 * 아래의 변수들은 브라우저에 표시될 내용과 연결되어 있습니다. (vuejs)
+                 * eosjs를 사용해 변수들을 변경하여 올바르게 정보를 표시하는 것이 
+                 * 본 예제의 목적입니다.
+                 * 
+                 * 현재는 의미없는 값들로 초기화되어있습니다.
+                 */
                 accountName: "",
                 balance: "0 EOS",
                 cpuTotal: 1,
@@ -42,11 +49,16 @@
                 ramTotal: 1,
                 ramUsed: 0,
 
+                /**
+                 * Current Network Info 기능에 보여줄 변수들입니다.
+                 * 마찬가지로, 이 변수들이 수정되면 화면에 값이 변경되게 됩니다.
+                 */
                 headBlockId: "aaa",
                 headBlockNum: 0,
                 headBlockProducer: "aaa",
                 headBlockTime: "aaa",
 
+                
                 networkOptions: {
                     chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca',
                     httpEndpoint: "http://jungle.cryptolions.io:18888",
@@ -64,36 +76,66 @@
         created: async function() {
             EventBus.$on('callUpdateCurrentInfo', this.updateCurrentInfo);
 
+            /**
+             * this.networkOptions을 사용하여
+             * eos 인스턴스를 초기화합니다.
+             */
             this.eos = Eos(this.networkOptions);
         },
         methods: {
             updateAccountInfo: async function() {
-                let result = await this.eos.getAccount({'account_name':this.accountName});
 
-                console.log(result);
+                // TODO 1 : account 정보 받아오기 
+                /**
+                 * eosjs에는 계정 정보를 받아오는 getAccount 메서드가 있습니다.
+                 * 이 메서드를 사용하여 계정 정보를 조회해보고,
+                 * 
+                 * 변경이 필요한 변수들의 값을 바꿔 화면에 변경된 정보를 출력해 봅시다.
+                 * 
+                 *  - 입력한 계정 이름 input 과 연결된 변수 : this.accountName
+                 *  - 조회한 정보를 가지고 변경해야 될 변수들
+                 *    this.accountName
+                 *    this.balance
+                 *    this.cpuTotal
+                 *    this.cpuUsed
+                 *    this.cpuStakedEOS
+                 *    this.netTotal
+                 *    this.netUsed
+                 *    this.netStakedEOS
+                 *    this.ramTotal
+                 *    this.ramUsed
+                 * 
+                 *    ex) this.ramTotal = result.ram_quota;
+                 *        this.ramUsed = result.ram_usage;
+                 *        ....
+                 */
 
-                this.accountName = result.account_name;
-                this.balance = result.core_liquid_balance;
-                this.cpuTotal = Number(result.cpu_limit.max);
-                this.cpuUsed = result.cpu_limit.used;
-                this.cpuStakedEOS = result.cpu_weight;
-                this.netTotal = Number(result.net_limit.max);
-                this.netUsed = result.net_limit.used;
-                this.netStakedEOS = result.net_weight;
-                this.ramTotal = result.ram_quota;
-                this.ramUsed = result.ram_usage;
+                
+                // WRITE CODE HERE .....
+
 
                 EventBus.$emit('callAccountInfoCircleUpdate');
             },
             updateCurrentInfo: async function() {
-                let result = await this.eos.getInfo({});
+                // TODO 2 : 체인 정보 받아오기 
+                /**
+                 * eosjs에는 체인 정보를 받아오는 getInfo 메서드가 있습니다.
+                 * 이 메서드를 사용하여 체인 정보를 조회해보고,
+                 * 
+                 * 변경이 필요한 변수들의 값을 바꿔 화면에 변경된 정보를 출력해 봅시다.
+                 * 
+                 *  - 조회한 정보를 가지고 변경해야 될 변수들
+                 *    this.headBlockId
+                 *    this.headBlockNum
+                 *    this.headBlockProducer
+                 *    this.headBlockTime
+                 * 
+                 *    ex) this.headBlockId = result.head_block_id;
+                 *        ...
+                 */
 
-                console.log(result);
-
-                this.headBlockId = result.head_block_id;
-                this.headBlockNum = result.head_block_num;
-                this.headBlockProducer = result.head_block_producer;
-                this.headBlockTime = result.head_block_time;
+                
+                // WRITE CODE HERE .....
             }
         }
         
