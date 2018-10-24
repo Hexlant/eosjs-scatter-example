@@ -1,6 +1,6 @@
 <template>
     <div id='loginWithScatter'>
-        <b-button @click='scatterLogin'>LOGIN using Scatter</b-button>
+        <b-button @click='scatterLogin' :disabled="!scatterLoaded">{{ btnText }}</b-button>
     </div>
 </template>
 
@@ -11,10 +11,17 @@ import { EventBus } from '../EventBus.js'
 
 export default {
     name: 'LoginWithScatter',
-    props: {},
+    props: {
+        scatterLoaded: Boolean
+    },
     methods: {
         scatterLogin: function() {
             EventBus.$emit('callScatterLogin');
+        }
+    },
+    computed: {
+        btnText: function() {
+            return this.scatterLoaded ? "LOGIN using Scatter" : "Checking scatter installation..";
         }
     }
 }

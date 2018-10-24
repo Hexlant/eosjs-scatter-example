@@ -1,6 +1,10 @@
 <template>
     <div class="topStatistics">
-        <div id='statisticsPercent'>{{ percentComputed }}%</div>
+        <div id='tsTop'>
+            <div class='tsTopElement'>token issue status</div>
+            <div class='tsTopElement'>{{ percentComputed }}%</div>
+        </div>
+        
         <div id='statisticsProgress'>
             <div id='statisticsProgressInner' :style="'width:' + percentComputed + '%'">&nbsp;</div>
         </div>
@@ -38,10 +42,14 @@ export default {
         height: 30px;
         background: #555555;
     }
-
-    #statisticsPercent {
-        display: float;
-        text-align: right;
+    #tsTop {
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        align-items: center;
+        margin-top: 40px;
+    }
+    .tsTopElement {
         font-size: 2em;
     }
 </style>
